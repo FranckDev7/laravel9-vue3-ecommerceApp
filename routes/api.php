@@ -1,0 +1,37 @@
+<?php
+
+use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\ProductController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user', static function (Request $request) {
+        return $request->user();
+    });
+
+    Route::get('products/increase/{id}', [CartController::class, 'increase']);
+    Route::get('products/decrease/{id}', [CartController::class, 'decrease']);
+
+    Route::get('products/count', [CartController::class, 'count'])->name('products.count');
+
+    // resource : Génère toutes les routes RESTful classiques pour un contrôleur.
+    // apiResource : Génère seulement les routes API RESTful pour un contrôleur.
+    Route::apiResource('products', CartController::class);
+
+
+    // ✅ Route pour vider tout le panier
+    Route::delete('cart', [CartController::class, 'clearCart'])->name('cart.clear');
+});
+
